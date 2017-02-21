@@ -33,21 +33,37 @@ Action getRandomAction() {
   else
     return LEFT;
 }
+
 Action getGreedyAction(Agent *a, State s_t) {
-  float max, tmp;
+  float max = 0.0, tmp;
   Action next_a;
   State next_s;
 
-  next_s = getNextState(s_t, UP);
-  max = getNextReward(next_s);
-  next_a = UP;
+  if (s_t.y != next_s.y || s_t.x != next_s.x) {
+    max = a->QValues[stateAction2idx(s_t, UP)];
+    next_a = UP;
+  }
 
-  for (int action = 1; action < 4; ++action) {
-    next_s = getNextState(s_t, (Action)action);
-    tmp = getNextReward(next_s);
-    if(tmp > max){
+  if (s_t.y != next_s.y || s_t.x != next_s.x) {
+    tmp = a->QValues[stateAction2idx(s_t,RIGHT)];
+    if (tmp > max) {
       max = tmp;
-      next_a = (Action)action;
+      next_a = RIGHT;
+    }
+  }
+
+  if (s_t.y != next_s.y || s_t.x != next_s.x) {
+    tmp = a->QValues[stateAction2idx(s_t,LEFT)];
+    if (tmp > max) {
+      max = tmp;
+      next_a = LEFT;
+    }
+  }
+
+  if (s_t.y != next_s.y || s_t.x != next_s.x) {
+    tmp = a->QValues[stateAction2idx(s_t,DOWN)];
+    if (tmp > max) {
+      next_a = DOWN;
     }
   }
 
